@@ -1,21 +1,29 @@
 <template>
   <div
+    ref="cardRef"
     class="video-card rounded-xl"
+    :style="getTransformStyle"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
-<!--    <img :src="coverImage" alt="视频封面" id="video-cover" />-->
+    <!--    <img :src="coverImage" alt="视频封面" id="video-cover" />-->
     <div :id="videoId"></div>
+    <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { VideoCardProps } from "~/components/types";
 import { onMounted } from "vue";
+import {width} from "@unocss/preset-mini/theme";
 const props = defineProps<VideoCardProps>();
 const isHover = ref<boolean>(false);
 const coverImage = ref<string>(props.coverPath || "");
 const player = ref();
+const cardRef = ref<HTMLDivElement>();
+const baseX = 5;
+const baseY = 20;
+const baseDeg = 5;
 // const videUrl = ref<string>();
 onMounted(() => {
   getYoutubeData();
@@ -32,6 +40,29 @@ const getYoutubeData = async () => {
     coverImage.value = image;
   }
 };
+const getTransformStyle = computed(() => {
+  const box = cardRef.value?.getBoundingClientRect();
+  const {left = 0, right, width = 0, height= 0} = box || {};
+  const index = left > width ? Math.ceil(left / width) : 1
+  const center = Math.ceil(document.body.offsetWidth / width / 2)
+  const num = Math.abs(index - center);
+  console.log(box?.height)
+  console.log('center', center);
+  if (index === center) {
+    return {
+      width: '35rem',
+      height: '22rem',
+      transform: `rotateX(0deg) rotateY(0deg) translateZ(1rem) translateY(0px)`
+    }
+  }else if (index > center) {
+    return {
+      transform: `rotateX(${num * baseDeg + baseX}deg) rotateY(${num * baseDeg + baseY}deg) translateZ(1rem) translateY(${height * num / 5}px)`
+    }
+  }
+  return {
+    transform: `rotateX(-${num * baseDeg + baseX}deg) rotateY(${num * baseDeg + baseY}deg) translateZ(1rem) translateY(${height * num / 5}px)`
+  }
+})
 function handleMouseEnter() {
   isHover.value = true;
 }
@@ -56,12 +87,14 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-function onPlayerReady(event) {
+function onPlayerReady() {
   const cover = document.getElementById("video-cover");
-  cover.addEventListener("mouseover", function () {
-    player.playVideo();
-    cover.style.display = "none"; // 隐藏封面图像
-  });
+  if (cover) {
+    cover.addEventListener("mouseover", function () {
+      player.playVideo();
+      cover.style.display = "none"; // 隐藏封面图像
+    });
+  }
 }
 </script>
 

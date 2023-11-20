@@ -6,6 +6,7 @@ body {
   padding: 0;
   --bg-color: #1b1b1f;
   --text-c-1: rgba(255, 255, 245, 0.86);
+  overflow: hidden;
 }
 body {
   background-color: var(--bg-color);

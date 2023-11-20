@@ -1,5 +1,5 @@
 <template>
-  <div class="carouse-line w-full">
+  <div class="carouse-line">
     <VideoCard
       class="card"
       v-for="(video, index) in videoList"
@@ -64,39 +64,12 @@ const getCardStyle = computed(() => {
   flex-direction: row;
   justify-content: center;
   height: 18rem;
-  animation: rotateAn
-  18s
-  ease-in-out
-  infinite
-  2s;
-  animation-play-state: running;
+  position: absolute;
+  gap: 1rem;
   transform-style: preserve-3d;
   .card {
-    position: absolute;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0,0,0,.5);
-    bottom: 0;
-  }
-  .card:nth-child(1) {
-    transform: rotateY(0) translateZ(30rem);
-  }
-  .card:nth-child(2) {
-    transform: rotateY(0) translateZ(30rem);
-  }
-  .card:nth-child(3) {
-    transform: rotateY(60deg) translateZ(30rem);
-  }
-  .card:nth-child(4) {
-    transform: rotateY(120deg) translateZ(30rem);
-  }
-  .card:nth-child(5) {
-    transform: rotateY(180deg) translateZ(30rem);
-  }
-  .card:nth-child(6) {
-    transform: rotateY(240deg) translateZ(30rem);
-  }
-  .card:nth-child(7) {
-    transform: rotateY(300deg) translateZ(30rem);
   }
 }
 .carouse-line:hover {
